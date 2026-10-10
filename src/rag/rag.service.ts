@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { LlmService } from '../llm/llm.service';
 import { RetrievalService } from './retrieval/retrieval.service';
-import { LlmService } from 'src/llm/llm.service';
 
 @Injectable()
 export class RagService {
