@@ -4,6 +4,7 @@ import { CanteiroReportService } from '../canteiros/canteiro-report.service';
 
 import { LlmService } from '../llm/llm.service';
 import { ChatDto } from './chat.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('chat')
 @Controller('chat')
