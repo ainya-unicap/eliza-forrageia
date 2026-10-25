@@ -1,6 +1,5 @@
 
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { prisma } from '../../../lib/prisma';
 import { EmbeddingService } from '../embedding/embedding.service';
 
@@ -14,10 +13,7 @@ interface RetrievedChunk {
 
 @Injectable()
 export class RetrievalService {
-  constructor(
-    private readonly prisma = prisma as PrismaClient,
-    private readonly embedding: EmbeddingService,
-  ) {}
+  constructor(private readonly embedding: EmbeddingService) {}
 
   async search(
     query: string,
@@ -28,7 +24,7 @@ export class RetrievalService {
     const vectorLiteral = `[${vector.join(',')}]`;
 
     if (documentId) {
-      return this.prisma.$queryRaw<RetrievedChunk[]>`
+      return prisma.$queryRaw<RetrievedChunk[]>`
         SELECT
           id,
           "documentId",
@@ -45,7 +41,7 @@ export class RetrievalService {
       `;
     }
 
-    return this.prisma.$queryRaw<RetrievedChunk[]>`
+    return prisma.$queryRaw<RetrievedChunk[]>`
       SELECT
         id,
         "documentId",

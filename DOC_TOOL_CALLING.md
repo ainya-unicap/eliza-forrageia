@@ -250,3 +250,21 @@ A feature de tool calling transforma o assistente em um agente capaz de:
 - devolver resposta contextualizada e precisa
 
 Ela é a base para construir sistemas de IA com ações reais, em vez de apenas texto gerado.
+
+## Relatório de formulários de um canteiro
+
+A rota `POST /chat/canteiros/:id/formularios` gera um relatório a partir dos
+formulários retornados pela API principal.
+
+```http
+POST /chat/canteiros/123/formularios
+Authorization: Bearer <access-token>
+```
+
+O endpoint entrega o `id` e o token ao serviço de relatório. A ferramenta
+`get_canteiro_formularios` consulta `GET {API_PRINCIPAL}/canteiros/{id}/formularios`
+usando Axios e encaminha o token no cabeçalho `Authorization: Bearer ...`.
+O token é contexto de execução do backend: não faz parte dos argumentos enviados
+ao modelo. A rota não recebe prompt ou corpo HTTP: o prompt de sistema, a
+instrução para gerar o relatório e os tópicos editáveis ficam definidos no
+serviço de relatório.

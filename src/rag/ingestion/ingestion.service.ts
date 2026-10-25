@@ -2,12 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ChunkingService } from '../chunking/chunking.service';
 import { EmbeddingService } from '../embedding/embedding.service';
 import { prisma } from '../../../lib/prisma';
-import { PrismaClient } from '@prisma/client/extension';
 
 @Injectable()
 export class IngestionService {
     constructor(
-        private readonly prisma = prisma as PrismaClient,
         private readonly chunking: ChunkingService,
         private readonly embedding: EmbeddingService
     ) { }
@@ -17,7 +15,7 @@ export class IngestionService {
         content: string,
         title = 'none'
     ) {
-        const document = await this.prisma.document.findUnique({
+        const document = await prisma.document.findUnique({
             where: { id: documentId },
             select: { id: true }
         });
@@ -33,7 +31,7 @@ export class IngestionService {
         for (const [chunkIndex, chunkContent] of chunks.entries()) {
             const vector = await this.embedding.embedDocument(chunkContent, title);
 
-            const chunk = await this.prisma.chunk.create({
+            const chunk = await prisma.documentChunk.create({
                 data: {
                     documentId,
                     content: chunkContent,
@@ -47,7 +45,7 @@ export class IngestionService {
 
             const vectorLiteral = `[${vector.join(', ')}]`;
 
-            await this.prisma.$executeRaw`
+            await prisma.$executeRaw`
                 UPDATE "DocumentChunk"
                 SET embedding = CAST(${vectorLiteral} AS vector(768))
                 WHERE id = ${chunk.id}::uuid
