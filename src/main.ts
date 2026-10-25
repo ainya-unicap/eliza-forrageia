@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
+import { setupSwagger } from "./swagger";
 
 
 /**
@@ -10,8 +11,11 @@ import { AppModule } from "./app.module";
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  setupSwagger(app);
   await app.listen(process.env.PORT ?? 3001);
   // eslint-disable-next-line no-console
   console.log(`API rodando em http://localhost:${process.env.PORT ?? 3001}`);
+  // eslint-disable-next-line no-console
+  console.log(`Swagger em http://localhost:${process.env.PORT ?? 3001}/docs`);
 }
 bootstrap();

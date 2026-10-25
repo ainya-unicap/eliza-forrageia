@@ -1,8 +1,11 @@
+
 import { Body, Controller, Headers, Param, Post } from '@nestjs/common';
 import { CanteiroReportService } from '../canteiros/canteiro-report.service';
+
 import { LlmService } from '../llm/llm.service';
 import { ChatDto } from './chat.dto';
 
+@ApiTags('chat')
 @Controller('chat')
 export class ChatController {
   constructor(
@@ -10,11 +13,13 @@ export class ChatController {
     private readonly canteiroReportService: CanteiroReportService,
   ) {}
 
+
   @Post()
   async chat(@Body() chatDto: ChatDto) {
     const systemPrompt =
       chatDto.system ??
       'Você é um assistente útil. Use ferramentas quando forem necessárias para responder com precisão.';
+
 
     return this.llmService.generate(systemPrompt, chatDto.message);
   }
