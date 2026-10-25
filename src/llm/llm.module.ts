@@ -7,6 +7,6 @@ import { ToolRegistryService } from './tool-registry.service';
 @Module({
   imports: [forwardRef(() => RagModule)],
   providers: [GroqRepository, ToolRegistryService, LlmService],
-  exports: [LlmService],
+  exports: [LlmService, ToolRegistryService],
 })
 export class LlmModule {}
