@@ -57,7 +57,24 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
+## Deploy to Vercel
+
+The project uses `src/main.ts`, which Vercel detects as a NestJS entry point. The included `vercel.json` generates the Prisma Client and compiles the app during deployment.
+
+1. Import this repository into Vercel and keep the project root as the **Root Directory**.
+2. Use Node.js **24.x**. The build command is configured as `npm run vercel-build`; leave the output directory unset.
+3. Add these environment variables for Production, Preview, and Development:
+   - `DATABASE_URL`: PostgreSQL connection string used by the app. Prefer a pooled connection string for serverless workloads.
+   - `DIRECT_URL`: direct PostgreSQL connection string used by Prisma configuration and migrations.
+   - `GROQ_API_KEY`: API key used by chat.
+   - `GEMINI_API_KEY`: API key used for embeddings.
+4. Deploy. Ensure the PostgreSQL database is reachable from Vercel and has the `vector` extension enabled for the `vector(768)` column.
+
+The API runs as a Vercel Function, so process memory and local files are not guaranteed to persist between requests. Keep uploaded/generated files in object storage and use a serverless-compatible database connection. Vercel's function duration and request-size limits also apply.
+
+For local development, copy `.env.example` to `.env` and provide valid credentials. You can test the Vercel runtime locally with the Vercel CLI using `vercel dev`.
+
+### Other deployment options
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 

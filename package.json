@@ -5,8 +5,12 @@
   "author": "Deivyson05",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "build": "nest build",
+    "vercel-build": "prisma generate && npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -27,6 +31,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "@vercel/node": "^27.0.2",
     "dotenv": "^18.0.5",
     "groq-sdk": "^1.6.0",
     "mammoth": "^1.13.0",
