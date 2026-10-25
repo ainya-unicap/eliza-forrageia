@@ -1,4 +1,3 @@
-
 import { Body, Controller, Headers, Param, Post } from '@nestjs/common';
 import { CanteiroReportService } from '../canteiros/canteiro-report.service';
 
@@ -14,13 +13,11 @@ export class ChatController {
     private readonly canteiroReportService: CanteiroReportService,
   ) {}
 
-
   @Post()
   async chat(@Body() chatDto: ChatDto) {
     const systemPrompt =
       chatDto.system ??
       'Você é um assistente útil. Use ferramentas quando forem necessárias para responder com precisão.';
-
 
     return this.llmService.generate(systemPrompt, chatDto.message);
   }
@@ -32,8 +29,6 @@ export class ChatController {
   ) {
     const accessToken = authorization?.replace(/^Bearer\s+/i, '').trim();
 
-    return {
-      message: await this.canteiroReportService.generate(id, accessToken ?? ''),
-    };
+    return this.canteiroReportService.generate(id, accessToken ?? '');
   }
 }
