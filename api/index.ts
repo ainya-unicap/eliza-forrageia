@@ -4,6 +4,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import cors from 'cors';
+import { setupSwagger } from '../src/swagger';
 
 const server = express();
 
@@ -22,6 +23,8 @@ async function bootstrap() {
     
     // Opcional: se sua API usa prefixo global, descomente a linha abaixo:
     // app.setGlobalPrefix('api');
+
+    setupSwagger(app);
 
     await app.init();
     cachedServer = server;
