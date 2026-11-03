@@ -19,6 +19,9 @@ Análise dos dados.
 # Considerações finais
 Conclusão do relatório.
 }}},
+# Referências
+- Manual técnico de forrageiras
+}}},
 # Observação adicional
 Este tópico deve ser descartado.`);
 
@@ -27,6 +30,7 @@ Este tópico deve ser descartado.`);
       objective: 'Objetivo dos formulários.',
       development: 'Análise dos dados.',
       final_thoughts: 'Conclusão do relatório.',
+      references: '- Manual técnico de forrageiras',
     });
   });
 
@@ -36,6 +40,7 @@ Este tópico deve ser descartado.`);
       objective: 'Explicação.',
       development: '',
       final_thoughts: '',
+      references: '',
     });
   });
 });

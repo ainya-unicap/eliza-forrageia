@@ -48,7 +48,7 @@ export class IngestionService {
             await prisma.$executeRaw`
                 UPDATE "DocumentChunk"
                 SET embedding = CAST(${vectorLiteral} AS vector(768))
-                WHERE id = ${chunk.id}::uuid
+                WHERE id = ${chunk.id}
             `;
 
             results.push(chunk);

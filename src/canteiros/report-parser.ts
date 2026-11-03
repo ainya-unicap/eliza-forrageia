@@ -3,6 +3,7 @@ export interface CanteiroReport {
   objective: string;
   development: string;
   final_thoughts: string;
+  references: string;
 }
 
 const REPORT_SECTIONS: Record<string, keyof CanteiroReport> = {
@@ -10,6 +11,7 @@ const REPORT_SECTIONS: Record<string, keyof CanteiroReport> = {
   objetivo: 'objective',
   desenvolvimento: 'development',
   'consideracoes finais': 'final_thoughts',
+  referencias: 'references',
 };
 
 function normalizeHeading(heading: string): string {
@@ -36,6 +38,7 @@ export function parseCanteiroReport(text: string): CanteiroReport {
     objective: '',
     development: '',
     final_thoughts: '',
+    references: '',
   };
   const headingRegex = /^\s*#{1,6}\s+(.+?)\s*#*\s*$/gmu;
   const headings = [...text.matchAll(headingRegex)];

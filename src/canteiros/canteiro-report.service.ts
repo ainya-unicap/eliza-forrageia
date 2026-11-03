@@ -20,10 +20,11 @@ export class CanteiroReportService {
     const generatedReport = await this.llmService.generateWithTools(
       CANTEIRO_REPORT_SYSTEM_PROMPT,
       'Gere um relatório dos formulários deste canteiro.',
-      2,
+      4,
       {
         canteiroId,
         accessToken: accessToken.trim(),
+        includeKnowledgeReferences: true,
       },
     );
 

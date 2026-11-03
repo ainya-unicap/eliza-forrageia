@@ -74,6 +74,16 @@ The API runs as a Vercel Function, so process memory and local files are not gua
 
 For local development, copy `.env.example` to `.env` and provide valid credentials. You can test the Vercel runtime locally with the Vercel CLI using `vercel dev`.
 
+### Ingest documents into the vector database
+
+Set `DATABASE_URL` and `GEMINI_API_KEY` in `.env`, then place `.pdf`, `.docx`, or `.txt` files directly inside `documentos` (or `documents`) at the project root. Run:
+
+```bash
+npm run ingest:documents
+```
+
+The command extracts text, generates embeddings, and saves document chunks to PostgreSQL with pgvector. To use a different folder, pass its path, for example `npm run ingest:documents -- ./my-documents`. Check the per-file results printed by the command; rerunning it creates new document records.
+
 ### Other deployment options
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.

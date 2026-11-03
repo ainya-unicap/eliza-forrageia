@@ -268,3 +268,17 @@ O token é contexto de execução do backend: não faz parte dos argumentos envi
 ao modelo. A rota não recebe prompt ou corpo HTTP: o prompt de sistema, a
 instrução para gerar o relatório e os tópicos editáveis ficam definidos no
 serviço de relatório.
+
+### Base documental vetorial nos relatórios
+
+A ferramenta `search_knowledge_base` pesquisa os trechos relevantes dos
+documentos ingeridos no PostgreSQL/pgvector. No relatório de canteiro, o agente
+deve consultar tanto essa ferramenta quanto `get_canteiro_formularios`: os
+formulários são a fonte dos dados específicos do canteiro, e os documentos
+servem como referências técnicas para a análise.
+
+A resposta do endpoint de relatório inclui o campo `references`, preenchido
+com uma lista dos títulos dos documentos que forneceram trechos relevantes.
+Quando nenhum documento relevante for recuperado, o campo informa isso
+explicitamente. O chat comum continua usando a ferramenta de busca, mas não
+acrescenta automaticamente uma seção de referências à resposta.

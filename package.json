@@ -11,6 +11,7 @@
   "scripts": {
     "build": "nest build",
     "vercel-build": "prisma generate && npm run build",
+    "ingest:documents": "node -r ts-node/register -r tsconfig-paths/register src/rag/ingestion/load-documents.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

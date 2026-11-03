@@ -10,7 +10,6 @@ import { basename, extname, join } from 'node:path';
 import { PDFParse } from 'pdf-parse';
 import * as mammoth from 'mammoth';
 
-import { PrismaClient } from '@prisma/client';
 import { prisma } from '../../../lib/prisma';
 import { IngestionService } from './ingestion.service';
 
@@ -18,10 +17,7 @@ import { IngestionService } from './ingestion.service';
 export class DocumentLoaderService {
   private readonly logger = new Logger(DocumentLoaderService.name);
 
-  constructor(
-    private readonly prisma = prisma as PrismaClient,
-    private readonly ingestion: IngestionService,
-  ) {}
+  constructor(private readonly ingestion: IngestionService) {}
 
   async loadDirectory(directory: string) {
     const files = await readdir(directory, {
@@ -60,7 +56,7 @@ export class DocumentLoaderService {
 
         const title = basename(entry.name, extension);
 
-        const document = await this.prisma.document.create({
+        const document = await prisma.document.create({
           data: { name: title },
         });
 
@@ -78,7 +74,7 @@ export class DocumentLoaderService {
           });
         } catch (error) {
           // Remove o documento se a ingestão falhar.
-          await this.prisma.document.delete({
+          await prisma.document.delete({
             where: { id: document.id },
           });
 

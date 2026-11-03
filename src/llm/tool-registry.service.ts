@@ -5,6 +5,7 @@ import { RetrievalService } from '../rag/retrieval/retrieval.service';
 export interface LlmToolExecutionContext {
   canteiroId?: string;
   accessToken?: string;
+  includeKnowledgeReferences?: boolean;
 }
 
 export type LlmToolExecutor = (
@@ -55,7 +56,7 @@ export class ToolRegistryService {
     this.register({
       name: 'search_knowledge_base',
       description:
-        'Pesquisa a base de conhecimento por uma pergunta semântica e devolve os trechos mais relevantes.',
+        'Pesquisa documentos técnicos ingeridos na base vetorial por uma pergunta semântica. Use os trechos retornados como referência técnica, sem confundi-los com os dados dos formulários.',
       parameters: {
         type: 'object',
         properties: {
@@ -72,22 +73,23 @@ export class ToolRegistryService {
       },
       executor: async ({ query, limit = 5 }) => {
         if (!this.retrievalService) {
-          return {
-            message: 'Serviço de busca indisponível no momento.',
-          };
+          throw new Error('Serviço de busca documental indisponível.');
         }
 
         const results = await this.retrievalService.search(
           String(query),
-          Number(limit) || 5,
+          Math.min(Math.max(Math.trunc(Number(limit) || 5), 1), 10),
         );
 
-        return results.map((item) => ({
-          id: item.id,
-          documentId: item.documentId,
-          similarity: item.similarity,
-          content: item.content,
-        }));
+        return results
+          .filter((item) => item.similarity > 0.7)
+          .map((item) => ({
+            id: item.id,
+            documentId: item.documentId,
+            documentName: item.documentName,
+            similarity: item.similarity,
+            content: item.content,
+          }));
       },
     });
   }

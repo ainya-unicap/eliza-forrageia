@@ -27,6 +27,7 @@ export class LlmService {
       { role: 'system', content: system },
       { role: 'user', content: user },
     ];
+    const knowledgeReferences = new Set<string>();
 
     let response = await this.groqRepository.get(messages, {
       tools: this.toolRegistry.getTools(toolContext),
@@ -62,6 +63,37 @@ export class LlmService {
         }),
       );
 
+      if (toolContext?.includeKnowledgeReferences) {
+        for (const result of toolResults) {
+          if (result.name !== 'search_knowledge_base' || !result.content) {
+            continue;
+          }
+
+          try {
+            const searchResults: unknown = JSON.parse(result.content);
+            if (!Array.isArray(searchResults)) {
+              continue;
+            }
+
+            for (const item of searchResults) {
+              if (
+                typeof item === 'object' &&
+                item !== null &&
+                'documentName' in item &&
+                typeof item.documentName === 'string' &&
+                item.documentName.trim()
+              ) {
+                knowledgeReferences.add(
+                  item.documentName.replace(/[\r\n]+/gu, ' ').trim(),
+                );
+              }
+            }
+          } catch {
+            // Tool errors are returned to the model and are not citations.
+          }
+        }
+      }
+
       messages.push(...toolResults);
 
       response = await this.groqRepository.get(messages, {
@@ -72,6 +104,18 @@ export class LlmService {
       rounds += 1;
     }
 
-    return response.content ?? '';
+    const answer = response.content ?? '';
+
+    if (!toolContext?.includeKnowledgeReferences) {
+      return answer;
+    }
+
+    const references = [...knowledgeReferences]
+      .map((name) => `- ${name}`)
+      .join('\n');
+
+    return `${answer}\n\n# Referências\n${
+      references || 'Nenhum documento relevante foi recuperado da base documental.'
+    }`;
   }
 }

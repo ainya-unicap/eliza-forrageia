@@ -6,9 +6,16 @@ import { RetrievalService } from './retrieval/retrieval.service';
 import { IngestionService } from './ingestion/ingestion.service';
 import { IngestionController } from './ingestion/ingestion.controller';
 import { LlmModule } from '../llm/llm.module';
+import { DocumentLoaderService } from './ingestion/document-loader.service';
 
 @Module({
-  providers: [RagService, EmbeddingService, RetrievalService, IngestionService],
+  providers: [
+    RagService,
+    EmbeddingService,
+    RetrievalService,
+    IngestionService,
+    DocumentLoaderService,
+  ],
   imports: [ChunkingModule, forwardRef(() => LlmModule)],
   controllers: [IngestionController],
   exports: [RetrievalService, IngestionService, EmbeddingService],

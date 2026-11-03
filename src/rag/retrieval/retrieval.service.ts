@@ -6,6 +6,7 @@ import { EmbeddingService } from '../embedding/embedding.service';
 interface RetrievedChunk {
   id: string;
   documentId: string;
+  documentName: string;
   content: string;
   chunkIndex: number;
   similarity: number;
@@ -26,33 +27,39 @@ export class RetrievalService {
     if (documentId) {
       return prisma.$queryRaw<RetrievedChunk[]>`
         SELECT
-          id,
-          "documentId",
-          content,
-          "chunkIndex",
+          chunk.id,
+          chunk."documentId",
+          document.name AS "documentName",
+          chunk.content,
+          chunk."chunkIndex",
           (
-            1 - (embedding <=> CAST(${vectorLiteral} AS vector))
+            1 - (chunk.embedding <=> CAST(${vectorLiteral} AS vector))
           )::float8 AS similarity
-        FROM "DocumentChunk"
-        WHERE embedding IS NOT NULL
-          AND "documentId" = ${documentId}::uuid
-        ORDER BY embedding <=> CAST(${vectorLiteral} AS vector)
+        FROM "DocumentChunk" AS chunk
+        JOIN "Document" AS document
+          ON document.id = chunk."documentId"
+        WHERE chunk.embedding IS NOT NULL
+          AND chunk."documentId" = ${documentId}
+        ORDER BY chunk.embedding <=> CAST(${vectorLiteral} AS vector)
         LIMIT ${limit}
       `;
     }
 
     return prisma.$queryRaw<RetrievedChunk[]>`
       SELECT
-        id,
-        "documentId",
-        content,
-        "chunkIndex",
+        chunk.id,
+        chunk."documentId",
+        document.name AS "documentName",
+        chunk.content,
+        chunk."chunkIndex",
         (
-          1 - (embedding <=> CAST(${vectorLiteral} AS vector))
+          1 - (chunk.embedding <=> CAST(${vectorLiteral} AS vector))
         )::float8 AS similarity
-      FROM "DocumentChunk"
-      WHERE embedding IS NOT NULL
-      ORDER BY embedding <=> CAST(${vectorLiteral} AS vector)
+      FROM "DocumentChunk" AS chunk
+      JOIN "Document" AS document
+        ON document.id = chunk."documentId"
+      WHERE chunk.embedding IS NOT NULL
+      ORDER BY chunk.embedding <=> CAST(${vectorLiteral} AS vector)
       LIMIT ${limit}
     `;
   }
