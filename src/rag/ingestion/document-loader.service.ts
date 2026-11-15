@@ -7,7 +7,6 @@ import {
 import { readdir, readFile } from 'node:fs/promises';
 import { basename, extname, join } from 'node:path';
 
-import { PDFParse } from 'pdf-parse';
 import * as mammoth from 'mammoth';
 
 import { prisma } from '../../../lib/prisma';
@@ -117,6 +116,7 @@ export class DocumentLoaderService {
 
     if (extension === '.pdf') {
       const buffer = await readFile(filePath);
+      const { PDFParse } = await import('pdf-parse');
       const parser = new PDFParse({ data: buffer });
 
       try {
