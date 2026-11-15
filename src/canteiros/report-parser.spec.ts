@@ -43,4 +43,18 @@ Este tópico deve ser descartado.`);
       references: '',
     });
   });
+
+  it('accepts English field names as headings for backwards compatibility', () => {
+    expect(
+      parseCanteiroReport(
+        '# Introduction\nIntro\n# Objective\nGoal\n# Development\nAnalysis\n# Final thoughts\nConclusion\n# References\n- Source',
+      ),
+    ).toEqual({
+      introduction: 'Intro',
+      objective: 'Goal',
+      development: 'Analysis',
+      final_thoughts: 'Conclusion',
+      references: '- Source',
+    });
+  });
 });

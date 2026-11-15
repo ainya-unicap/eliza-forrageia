@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GroqRepository } from './groq/groqRepository';
 import { Message } from './groq/message.interface';
 import {
@@ -15,6 +15,23 @@ export class LlmService {
 
   async generate(system: string, user: string) {
     return this.generateWithTools(system, user);
+  }
+
+  async generateWithoutTools(system: string, user: string): Promise<string> {
+    const response = await this.groqRepository.get([
+      { role: 'system', content: system },
+      { role: 'user', content: user },
+    ]);
+
+    const content = response.content?.trim();
+
+    if (!content) {
+      throw new InternalServerErrorException(
+        'O modelo não retornou o conteúdo do relatório.',
+      );
+    }
+
+    return content;
   }
 
   async generateWithTools(

@@ -8,10 +8,17 @@ export interface CanteiroReport {
 
 const REPORT_SECTIONS: Record<string, keyof CanteiroReport> = {
   introducao: 'introduction',
+  introduction: 'introduction',
   objetivo: 'objective',
+  objective: 'objective',
   desenvolvimento: 'development',
+  development: 'development',
   'consideracoes finais': 'final_thoughts',
+  'final thoughts': 'final_thoughts',
+  finalthoughts: 'final_thoughts',
+  final_thoughts: 'final_thoughts',
   referencias: 'references',
+  references: 'references',
 };
 
 function normalizeHeading(heading: string): string {

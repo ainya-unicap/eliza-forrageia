@@ -11,7 +11,7 @@ export class PrincipalApiClient {
     accessToken: string,
   ): Promise<unknown> {
     const baseUrl = this.configService.getOrThrow<string>('API_PRINCIPAL');
-    const url = `${baseUrl.replace(/\/+$/, '')}/api/canteiros/${encodeURIComponent(canteiroId)}/formularios`;
+    const url = `${baseUrl.replace(/\/+$/, '')}/canteiros/${encodeURIComponent(canteiroId)}/formularios`;
     const token = accessToken.startsWith('Bearer ')
       ? accessToken
       : `Bearer ${accessToken}`;

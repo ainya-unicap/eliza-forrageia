@@ -253,16 +253,16 @@ Ela é a base para construir sistemas de IA com ações reais, em vez de apenas 
 
 ## Relatório de formulários de um canteiro
 
-A rota `POST /chat/canteiros/:id/formularios` gera um relatório a partir dos
-formulários retornados pela API principal.
+A rota `POST /canteiros/:id/formularios` gera um relatório a partir dos
+formulários retornados pela API principal e dos trechos recuperados pelo RAG.
 
 ```http
-POST /chat/canteiros/123/formularios
+POST /canteiros/123/formularios
 Authorization: Bearer <access-token>
 ```
 
-O endpoint entrega o `id` e o token ao serviço de relatório. A ferramenta
-`get_canteiro_formularios` consulta `GET {API_PRINCIPAL}/canteiros/{id}/formularios`
+O serviço consulta explicitamente
+`GET {API_PRINCIPAL}/canteiros/{id}/formularios` usando Axios.
 usando Axios e encaminha o token no cabeçalho `Authorization: Bearer ...`.
 O token é contexto de execução do backend: não faz parte dos argumentos enviados
 ao modelo. A rota não recebe prompt ou corpo HTTP: o prompt de sistema, a
@@ -271,11 +271,10 @@ serviço de relatório.
 
 ### Base documental vetorial nos relatórios
 
-A ferramenta `search_knowledge_base` pesquisa os trechos relevantes dos
-documentos ingeridos no PostgreSQL/pgvector. No relatório de canteiro, o agente
-deve consultar tanto essa ferramenta quanto `get_canteiro_formularios`: os
-formulários são a fonte dos dados específicos do canteiro, e os documentos
-servem como referências técnicas para a análise.
+A busca semântica pesquisa trechos dos documentos ingeridos no PostgreSQL/
+pgvector usando os dados dos formulários como contexto. Os formulários são a
+fonte dos dados específicos do canteiro, e os documentos servem como referências
+técnicas para a análise.
 
 A resposta do endpoint de relatório inclui o campo `references`, preenchido
 com uma lista dos títulos dos documentos que forneceram trechos relevantes.

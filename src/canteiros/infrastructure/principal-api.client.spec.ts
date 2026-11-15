@@ -14,7 +14,7 @@ describe('PrincipalApiClient', () => {
   it('requests the canteiro forms endpoint with a bearer token', async () => {
     const responseData = [{ id: 'form-1' }];
     const configService = {
-      getOrThrow: jest.fn().mockReturnValue('https://principal.example/api/'),
+      getOrThrow: jest.fn().mockReturnValue('https://principal.example/'),
     } as unknown as ConfigService;
     const getSpy = jest
       .spyOn(axios, 'get')
@@ -26,12 +26,27 @@ describe('PrincipalApiClient', () => {
     ).resolves.toEqual(responseData);
 
     expect(getSpy).toHaveBeenCalledWith(
-      'https://principal.example/api/canteiros/canteiro%201/formularios',
+      'https://principal.example/canteiros/canteiro%201/formularios',
       {
         headers: {
           Authorization: 'Bearer access-token',
         },
       },
+    );
+  });
+
+  it('preserves a configured API path prefix without appending another one', async () => {
+    const configService = {
+      getOrThrow: jest.fn().mockReturnValue('https://principal.example/api/'),
+    } as unknown as ConfigService;
+    const getSpy = jest.spyOn(axios, 'get').mockResolvedValue({ data: [] });
+    const client = new PrincipalApiClient(configService);
+
+    await client.getCanteiroFormularios('123', 'access-token');
+
+    expect(getSpy).toHaveBeenCalledWith(
+      'https://principal.example/api/canteiros/123/formularios',
+      expect.any(Object),
     );
   });
 });
