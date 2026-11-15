@@ -81,9 +81,7 @@ export class ToolRegistryService {
           Math.min(Math.max(Math.trunc(Number(limit) || 5), 1), 10),
         );
 
-        return results
-          .filter((item) => item.similarity > 0.7)
-          .map((item) => ({
+        return results.map((item) => ({
             id: item.id,
             documentId: item.documentId,
             documentName: item.documentName,

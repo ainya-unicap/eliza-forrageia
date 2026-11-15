@@ -53,12 +53,12 @@ describe('LlmService', () => {
       search: jest.fn().mockResolvedValue([
         {
           content: 'Referência técnica recuperada',
-          similarity: 0.92,
+          similarity: 0.62,
           documentName: 'Manual de forrageiras',
         },
         {
           content: 'Outro trecho da mesma fonte',
-          similarity: 0.9,
+          similarity: 0.58,
           documentName: 'Manual de forrageiras',
         },
       ]),
