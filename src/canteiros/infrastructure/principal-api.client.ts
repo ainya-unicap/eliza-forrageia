@@ -10,8 +10,13 @@ export class PrincipalApiClient {
     canteiroId: string,
     accessToken: string,
   ): Promise<unknown> {
-    const baseUrl = this.configService.getOrThrow<string>('API_PRINCIPAL');
-    const url = `${baseUrl.replace(/\/+$/, '')}/canteiros/${encodeURIComponent(canteiroId)}/formularios`;
+    const configuredBaseUrl = this.configService
+      .getOrThrow<string>('API_PRINCIPAL')
+      .replace(/\/+$/, '');
+    const apiBaseUrl = /\/api$/i.test(configuredBaseUrl)
+      ? configuredBaseUrl
+      : `${configuredBaseUrl}/api`;
+    const url = `${apiBaseUrl}/canteiros/${encodeURIComponent(canteiroId)}/formularios`;
     const token = accessToken.startsWith('Bearer ')
       ? accessToken
       : `Bearer ${accessToken}`;

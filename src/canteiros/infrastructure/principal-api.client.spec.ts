@@ -26,7 +26,7 @@ describe('PrincipalApiClient', () => {
     ).resolves.toEqual(responseData);
 
     expect(getSpy).toHaveBeenCalledWith(
-      'https://principal.example/canteiros/canteiro%201/formularios',
+      'https://principal.example/api/canteiros/canteiro%201/formularios',
       {
         headers: {
           Authorization: 'Bearer access-token',
